@@ -4,9 +4,29 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>InfraSync Dashboard</title>
+    <style>
+      body { font-family: sans-serif; padding: 2rem; }
+      #output { margin-top: 1rem; padding: 1rem; background: #f4f4f4; border-radius: 5px; }
+      button { padding: 0.5rem 1rem; font-size: 1rem; }
+    </style>
   </head>
   <body>
     <h1>InfraSync Dashboard</h1>
-    <p>Status: Loading...</p>
+    <button onclick="fetchData()">Check Infrastructure Status</button>
+    <div id="output">Status: Ready</div>
+
+    <script>
+      async function fetchData() {
+        document.getElementById("output").innerText = "Loading...";
+        try {
+          const response = await fetch("/api/GetResourceList");
+          const result = await response.json();
+          const list = result.data.map(item => `🔹 ${item.name} (${item.type})`).join("<br>");
+          document.getElementById("output").innerHTML = `<strong>Resources:</strong><br>${list}`;
+        } catch (error) {
+          document.getElementById("output").innerText = "Error fetching data.";
+        }
+      }
+    </script>
   </body>
 </html>
